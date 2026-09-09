@@ -1,0 +1,17 @@
+{
+  "name": "jedkx-wttg3",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JEDKX WTTG3 operator console for website uptime, Otrex clickpoint pages, and VirtMesh mining rates.",
+  "scripts": {
+    "serve": "node scripts/serve.mjs",
+    "check": "node --check src/app.js && node --check src/data/sites.js && node --check src/data/miners.js && node --check src/integrations/otrex.js"
+  },
+  "keywords": [
+    "wttg3",
+    "welcome-to-the-game-iii",
+    "assistant",
+    "virtmesh"
+  ],
+  "license": "MIT"
+}

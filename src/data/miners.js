@@ -1,0 +1,36 @@
+(function registerMiners(global) {
+  const miners = [
+    ["Phoenix", 3, 4.79],
+    ["MediaVlu", 3, 3.93],
+    ["QA_Pivz", 3, 3.58],
+    ["HR_Treq", 3, 3.42],
+    ["VPN_Qwer", 3, 3.38],
+    ["FinLoxu", 3, 3.38],
+    ["OpsHax", 2, 3.23],
+    ["SalesMiv", 3, 3.21],
+    ["ChatEzk", 3, 3.17],
+    ["SecCrux", 2, 2.73],
+    ["EngZolp", 3, 2.63],
+    ["GameDrux", 2, 2.57],
+    ["PrintYis", 2, 2.43],
+    ["FileNuz", 2, 1.88],
+    ["WebTyk", 1, 1.84],
+    ["UserJyx", 1, 1.8],
+    ["Prod Glin", 2, 1.8],
+    ["VM_Wekl", 2, 1.74],
+    ["BackSkiv", 2, 1.49],
+    ["NetVorn", 1, 1.45],
+    ["TestXor", 2, 1.36],
+    ["CloudFuz", 1, 0.88],
+    ["SysBlip", 1, 0.87],
+    ["DevQuix", 1, 0.64],
+    ["LabBzop", 2, 0.48],
+    ["IT_Kwez", 1, 0.42],
+    ["DataRax", 1, 0.32],
+    ["WorkZap", 1, 0.31],
+    ["CodePlix", 1, 0.3],
+    ["LogJuk", 3, 0.3],
+  ];
+
+  global.JEDKX_WTTG3_MINERS = miners.map(([name, tier, rate]) => ({ name, tier, rate }));
+})(window);

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JEDKX WTTG3 Console</title>
+    <meta
+      name="description"
+      content="JEDKX WTTG3 operator console for website uptime, Otrex clickpoint pages, and VirtMesh mining rates."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="station">
+      <section class="left">
+        <header class="titlebar">
+          <div>
+            <p>JEDKX</p>
+            <h1>WTTG3 Operator Console</h1>
+          </div>
+          <div class="tools">
+            <input id="siteSearch" type="search" placeholder="Search" aria-label="Search website" />
+            <button id="helpButton" class="icon-button" type="button" aria-label="Open help" title="Help">?</button>
+            <button id="toggleViewer" type="button">Hide viewer</button>
+          </div>
+        </header>
+
+        <section class="box uptime">
+          <div class="box-head">
+            <h2>Website Uptime</h2>
+            <span id="siteCount">0</span>
+          </div>
+          <div class="uptime-columns">
+            <div>
+              <h3>Always</h3>
+              <div id="alwaysList" class="site-list"></div>
+            </div>
+            <div>
+              <h3>Timed</h3>
+              <div id="timedList" class="site-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="box miners">
+          <div class="box-head">
+            <h2>VirtMesh</h2>
+            <div class="tier-tabs" role="group" aria-label="Filter VirtMesh tier">
+              <button class="tier-tab active" type="button" data-tier="1">Tier I</button>
+              <button class="tier-tab" type="button" data-tier="2">Tier II</button>
+              <button class="tier-tab" type="button" data-tier="3">Tier III</button>
+            </div>
+          </div>
+          <div id="minerList" class="miner-list"></div>
+        </section>
+      </section>
+
+      <div
+        id="splitter"
+        class="splitter"
+        role="separator"
+        tabindex="0"
+        aria-label="Resize console panels"
+        aria-orientation="vertical"
+        aria-valuemin="35"
+        aria-valuemax="72"
+        aria-valuenow="50"
+        title="Drag to resize panels"
+      ></div>
+
+      <section class="right">
+        <header class="viewer-head">
+          <div>
+            <p id="viewerTime">:30 - :44</p>
+            <h2>
+              <span id="viewerTitle">Bizarre Propagation</span>
+              <a id="openExternal" class="icon-link" href="https://otrexdev.github.io/wttg3-assistant/Clickpoint%20Guides/100.html" target="_blank" rel="noreferrer" aria-label="Open selected guide in a new tab" title="Open in new tab">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14 4h6v6"></path>
+                  <path d="M10 14 20 4"></path>
+                  <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"></path>
+                </svg>
+              </a>
+            </h2>
+          </div>
+          <div class="viewer-actions">
+            <div id="subpages" class="subpages"></div>
+          </div>
+        </header>
+        <iframe
+          id="clickFrame"
+          title="Clickpoint guide"
+          src="https://otrexdev.github.io/wttg3-assistant/Clickpoint%20Guides/100.html"
+        ></iframe>
+      </section>
+    </main>
+
+    <dialog id="helpDialog" class="help-dialog">
+      <form method="dialog">
+        <header>
+          <div>
+            <p>JEDKX</p>
+            <h2>Operator Notes</h2>
+          </div>
+          <button class="dialog-close" type="submit" aria-label="Close help">X</button>
+        </header>
+        <section class="help-grid">
+          <article>
+            <h3>Console</h3>
+            <p>Use the left panel as the live route map. Always-open sites stay on the left; timed sites stay grouped on the right.</p>
+          </article>
+          <article>
+            <h3>Viewer</h3>
+            <p><b>main</b> is the first page. Names like <b>submit</b>, <b>catalog</b>, <b>order</b>, or <b>page2</b> are mapped subpages in the Otrex guide set.</p>
+          </article>
+          <article>
+            <h3>Open Icon</h3>
+            <p>The icon beside the selected website opens the current Otrex page externally and leaves this console in uptime/miner mode.</p>
+          </article>
+          <article>
+            <h3>VirtMesh</h3>
+            <p>Tier buttons filter hosts by availability tier. Rates are sorted high to low inside each tier.</p>
+          </article>
+          <article class="wide">
+            <h3>Otrex Guide Pages</h3>
+            <p>The right-side viewer opens the matching Otrex clickpoint page for the selected website. Use the marked areas and labels shown on that embedded page to find the key click location.</p>
+          </article>
+        </section>
+      </form>
+    </dialog>
+
+    <script src="src/data/sites.js"></script>
+    <script src="src/data/miners.js"></script>
+    <script src="src/integrations/otrex.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>
