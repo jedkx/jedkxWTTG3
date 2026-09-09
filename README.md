@@ -31,6 +31,8 @@ The app is intentionally static, but the code is split by responsibility so game
 - `src/integrations/README.md` documents integration ownership and update rules.
 - `src/app.js` contains rendering and interaction behavior.
 - `scripts/serve.mjs` runs a dependency-free local static server for iframe-safe local use.
+- `.nojekyll` keeps GitHub Pages in plain static-file mode.
+- `docs/deploy-github-pages.md` explains GitHub Pages publishing from the repository root.
 - `docs/helper.md` explains how the console should be used and maintained.
 - `AGENTS.md` gives repository guidance for future coding agents.
 
@@ -50,6 +52,7 @@ Otrex URL construction belongs in `src/integrations/otrex.js`. It is intentional
 - The splitter is desktop-first; mobile uses a stacked layout instead of cramped side-by-side panes.
 - The project stays static by design: no build pipeline, no runtime backend, and no dependency install required for normal use.
 - Local development should use the included static server instead of `file://` so iframe navigation uses a normal origin.
+- GitHub Pages should publish this repository from branch `main` and folder `/root`; keep `.nojekyll` in place.
 
 ## Run
 
@@ -72,6 +75,12 @@ The uptime and VirtMesh data are local. The clickpoint viewer embeds Otrex Assis
 ```text
 https://otrexdev.github.io/wttg3-assistant/Clickpoint%20Guides/
 ```
+
+## Publish
+
+This repository is ready for GitHub Pages as a root static site. After pushing to GitHub, enable **Settings > Pages > Deploy from a branch**, choose `main`, and set the folder to `/root`.
+
+Detailed steps are in `docs/deploy-github-pages.md`.
 
 ## Verify
 

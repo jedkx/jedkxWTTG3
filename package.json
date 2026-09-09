@@ -5,7 +5,7 @@
   "description": "JEDKX WTTG3 operator console for website uptime, Otrex clickpoint pages, and VirtMesh mining rates.",
   "scripts": {
     "serve": "node scripts/serve.mjs",
-    "check": "node --check src/app.js && node --check src/data/sites.js && node --check src/data/miners.js && node --check src/integrations/otrex.js"
+    "check": "node --check src/app.js && node --check src/data/sites.js && node --check src/data/miners.js && node --check src/integrations/otrex.js && node --check scripts/serve.mjs"
   },
   "keywords": [
     "wttg3",
