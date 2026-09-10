@@ -1,5 +1,4 @@
-(function registerSites(global) {
-  const sites = [
+const sites = [
     { name: "Bizarre Propagation", id: 100, time: ":30 - :44" },
     { name: "Blackhat Post", id: 101, time: ":00 - :29", sub: ["submit"] },
     { name: "Blushing Brides", id: 103, time: "Always", sub: ["join", "samples"] },
@@ -53,8 +52,7 @@
     { name: "You There?", id: 231, time: ":30 - :44", forceHack: "87%" },
   ];
 
-  global.JEDKX_WTTG3_SITES = sites.map((site) => ({
-    ...site,
-    key: site.name.toLowerCase().replace(/[^a-z0-9]/g, "-"),
-  }));
-})(window);
+export const SITES = sites.map((site) => ({
+  ...site,
+  key: site.name.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+}));

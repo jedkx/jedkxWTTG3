@@ -111,7 +111,7 @@ button {
 
 .right {
   display: grid;
-  grid-template-rows: 58px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
   border: 1px solid var(--line-strong);
@@ -225,9 +225,56 @@ h2 {
   font-size: 12px;
 }
 
+.head-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .tier-tabs {
   display: flex;
   gap: 4px;
+}
+
+.collapse-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: #0b0c0e;
+  color: var(--muted);
+}
+
+.collapse-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.18s ease;
+}
+
+.collapse-btn:hover {
+  border-color: var(--silver);
+  background: #17191c;
+  color: var(--text);
+}
+
+/* Collapsed VirtMesh: header only, rotate chevrons to point down */
+.left.miners-collapsed {
+  grid-template-rows: 42px minmax(0, 1fr) 34px;
+}
+
+.miners-collapsed .miners .tier-tabs,
+.miners-collapsed .miners .miner-list {
+  display: none;
+}
+
+.miners-collapsed .collapse-btn svg {
+  transform: rotate(180deg);
 }
 
 .tier-tab {
@@ -276,27 +323,47 @@ h2 {
 .site-list {
   min-height: 0;
   padding-top: 5px;
-  overflow: hidden;
+  padding-right: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
 }
 
-#alwaysList {
-  column-count: 1;
-  column-gap: 4px;
+.site-list::-webkit-scrollbar,
+.miner-list::-webkit-scrollbar {
+  width: 8px;
 }
 
+.site-list::-webkit-scrollbar-thumb,
+.miner-list::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background: var(--line-strong);
+}
+
+.site-list::-webkit-scrollbar-track,
+.miner-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#alwaysList,
 #timedList {
-  column-count: 1;
-  column-gap: 0;
+  column-count: auto;
+  column-width: auto;
 }
 
 .station.full-left #alwaysList,
 .station.full-left #timedList {
-  column-count: 2;
-  column-gap: 14px;
+  column-count: auto;
+  column-width: auto;
 }
 
 .station.full-left .left {
   grid-template-rows: 46px minmax(0, 1fr) 250px;
+}
+
+.station.full-left .left.miners-collapsed {
+  grid-template-rows: 46px minmax(0, 1fr) 34px;
 }
 
 .station.full-left .uptime-columns {
@@ -397,7 +464,10 @@ h2 {
   align-content: start;
   gap: 4px;
   padding: 6px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
 }
 
 .miner-row {
@@ -448,9 +518,11 @@ h2 {
 }
 
 .viewer-head {
+  min-height: 58px;
   padding: 7px 8px;
   border-width: 0 0 1px;
   border-radius: 0;
+  flex-wrap: wrap;
 }
 
 .viewer-actions {

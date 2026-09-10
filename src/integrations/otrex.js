@@ -1,28 +1,26 @@
-(function registerOtrexIntegration(global) {
-  const guideBase = "https://otrexdev.github.io/wttg3-assistant/Clickpoint%20Guides/";
-  const guideUrlCache = new Map();
+const guideBase = "https://otrexdev.github.io/wttg3-assistant/Clickpoint%20Guides/";
+const guideUrlCache = new Map();
 
-  function guidePageId(site, pageIndex) {
-    return Number(site.id) + Number(pageIndex);
+function guidePageId(site, pageIndex) {
+  return Number(site.id) + Number(pageIndex);
+}
+
+function guideUrl(site, pageIndex) {
+  const pageId = guidePageId(site, pageIndex);
+  if (!guideUrlCache.has(pageId)) {
+    guideUrlCache.set(pageId, `${guideBase}${pageId}.html`);
   }
 
-  function guideUrl(site, pageIndex) {
-    const pageId = guidePageId(site, pageIndex);
-    if (!guideUrlCache.has(pageId)) {
-      guideUrlCache.set(pageId, `${guideBase}${pageId}.html`);
-    }
+  return guideUrlCache.get(pageId);
+}
 
-    return guideUrlCache.get(pageId);
-  }
+function clearCache() {
+  guideUrlCache.clear();
+}
 
-  function clearCache() {
-    guideUrlCache.clear();
-  }
-
-  global.JEDKX_WTTG3_OTREX = Object.freeze({
-    clearCache,
-    guideBase,
-    guidePageId,
-    guideUrl,
-  });
-})(window);
+export const OTREX = Object.freeze({
+  clearCache,
+  guideBase,
+  guidePageId,
+  guideUrl,
+});

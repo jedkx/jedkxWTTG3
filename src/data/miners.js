@@ -1,5 +1,4 @@
-(function registerMiners(global) {
-  const miners = [
+const miners = [
     ["Phoenix", 3, 4.79],
     ["MediaVlu", 3, 3.93],
     ["QA_Pivz", 3, 3.58],
@@ -32,5 +31,4 @@
     ["LogJuk", 3, 0.3],
   ];
 
-  global.JEDKX_WTTG3_MINERS = miners.map(([name, tier, rate]) => ({ name, tier, rate }));
-})(window);
+export const MINERS = miners.map(([name, tier, rate]) => ({ name, tier, rate }));

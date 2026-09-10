@@ -1,10 +1,12 @@
+import { SITES } from "./data/sites.js";
+import { MINERS } from "./data/miners.js";
+import { OTREX } from "./integrations/otrex.js";
+
 (function bootConsole(global, document) {
   const uptimeGroups = ["Always", ":00 - :14", ":00 - :29", ":15 - :29", ":30 - :44", ":30 - :59", ":45 - :59"];
-  const otrex = global.JEDKX_WTTG3_OTREX || {
-    guideUrl: (site, pageIndex) => `https://otrexdev.github.io/wttg3-assistant/Clickpoint%20Guides/${Number(site.id) + Number(pageIndex)}.html`,
-  };
-  const sites = global.JEDKX_WTTG3_SITES || [];
-  const miners = global.JEDKX_WTTG3_MINERS || [];
+  const otrex = OTREX;
+  const sites = SITES;
+  const miners = MINERS;
   const splitConfig = {
     key: "jedkx:wttg3:left-pane",
     minPercent: 35,
@@ -34,6 +36,8 @@
     station: document.querySelector(".station"),
     splitter: document.querySelector("#splitter"),
     toggleViewer: document.querySelector("#toggleViewer"),
+    toggleMiners: document.querySelector("#toggleMiners"),
+    left: document.querySelector(".left"),
     helpButton: document.querySelector("#helpButton"),
     helpDialog: document.querySelector("#helpDialog"),
   };
@@ -257,6 +261,13 @@
   dom.toggleViewer.addEventListener("click", () => {
     dom.station.classList.toggle("full-left");
     dom.toggleViewer.textContent = dom.station.classList.contains("full-left") ? "Show viewer" : "Hide viewer";
+  });
+
+  dom.toggleMiners.addEventListener("click", () => {
+    const collapsed = dom.left.classList.toggle("miners-collapsed");
+    dom.toggleMiners.setAttribute("aria-expanded", String(!collapsed));
+    dom.toggleMiners.setAttribute("aria-label", collapsed ? "Expand VirtMesh" : "Collapse VirtMesh");
+    dom.toggleMiners.title = collapsed ? "Expand VirtMesh" : "Collapse VirtMesh";
   });
 
   dom.openExternal.addEventListener("click", () => {
