@@ -7,6 +7,19 @@ import { OTREX } from "./integrations/otrex.js";
   const otrex = OTREX;
   const sites = SITES;
   const miners = MINERS;
+  const wikiConfig = {
+    key: "jedkx:wttg3:wiki-runs",
+    collapseKey: "jedkx:wttg3:wiki-runs-collapsed",
+    activeKey: "jedkx:wttg3:active-wiki",
+    defaults: {
+      cos: { label: "CoS", name: "Codex of Silence", raw: "", siteKeys: [] },
+      td: { label: "TD", name: "Toxic Delights", raw: "", siteKeys: [] },
+      trm: { label: "TRM", name: "The Red Mirror", raw: "", siteKeys: [] },
+    },
+  };
+  const minerPanelConfig = {
+    collapseKey: "jedkx:wttg3:virtmesh-collapsed",
+  };
   const splitConfig = {
     key: "jedkx:wttg3:left-pane",
     minPercent: 35,
@@ -19,6 +32,10 @@ import { OTREX } from "./integrations/otrex.js";
   let activeSite = sites[0];
   let activePage = 0;
   let activeTier = "1";
+  let activeWiki = "cos";
+  let wikiRuns = readStoredWikiRuns();
+  let isWikiCollapsed = readStoredWikiCollapsed();
+  let isMinerCollapsed = readStoredMinerCollapsed();
   let activeSplitPercent = 50;
   let isResizing = false;
 
@@ -33,13 +50,24 @@ import { OTREX } from "./integrations/otrex.js";
     clickFrame: document.querySelector("#clickFrame"),
     openExternal: document.querySelector("#openExternal"),
     minerList: document.querySelector("#minerList"),
+    miners: document.querySelector(".miners"),
+    minerToggle: document.querySelector("#minerToggle"),
+    left: document.querySelector(".left"),
     station: document.querySelector(".station"),
     splitter: document.querySelector("#splitter"),
     toggleViewer: document.querySelector("#toggleViewer"),
-    toggleMiners: document.querySelector("#toggleMiners"),
-    left: document.querySelector(".left"),
     helpButton: document.querySelector("#helpButton"),
     helpDialog: document.querySelector("#helpDialog"),
+    wikiPanel: document.querySelector("#wikiPanel"),
+    wikiToggle: document.querySelector("#wikiToggle"),
+    wikiBody: document.querySelector("#wikiBody"),
+    wikiSummary: document.querySelector("#wikiSummary"),
+    wikiName: document.querySelector("#wikiName"),
+    wikiTabs: document.querySelector("#wikiTabs"),
+    wikiPaste: document.querySelector("#wikiPaste"),
+    wikiCount: document.querySelector("#wikiCount"),
+    wikiHint: document.querySelector("#wikiHint"),
+    wikiReset: document.querySelector("#wikiReset"),
   };
 
   function clamp(value, min, max) {
@@ -61,6 +89,130 @@ import { OTREX } from "./integrations/otrex.js";
     } catch {
       // Layout preference is optional; blocked storage should not break the console.
     }
+  }
+
+  function normalizeSiteName(value) {
+    return String(value)
+      .toLowerCase()
+      .replace(/\[censored\]/g, "shit")
+      .replace(/[^a-z0-9]/g, "");
+  }
+
+  function defaultWikiRuns() {
+    return Object.fromEntries(
+      Object.entries(wikiConfig.defaults).map(([key, value]) => [key, { ...value, siteKeys: [...value.siteKeys] }]),
+    );
+  }
+
+  function readStoredWikiRuns() {
+    try {
+      const parsed = JSON.parse(global.localStorage?.getItem(wikiConfig.key) || "");
+      const runs = defaultWikiRuns();
+      for (const key of Object.keys(runs)) {
+        if (!parsed?.[key]) continue;
+        const run = parsed[key];
+        runs[key] = {
+          ...runs[key],
+          name: typeof run.name === "string" ? run.name.slice(0, 24) : runs[key].name,
+          raw: typeof run.raw === "string" ? run.raw : "",
+          siteKeys: Array.isArray(run.siteKeys) ? run.siteKeys.filter((siteKey) => sites.some((site) => site.key === siteKey)) : [],
+        };
+      }
+      return runs;
+    } catch {
+      return defaultWikiRuns();
+    }
+  }
+
+  function readStoredWikiCollapsed() {
+    try {
+      return global.localStorage?.getItem(wikiConfig.collapseKey) === "true";
+    } catch {
+      return true;
+    }
+  }
+
+  function readStoredActiveWiki() {
+    try {
+      const stored = global.localStorage?.getItem(wikiConfig.activeKey);
+      return stored && wikiRuns[stored] ? stored : activeWiki;
+    } catch {
+      return activeWiki;
+    }
+  }
+
+  function writeStoredWikiRuns() {
+    try {
+      global.localStorage?.setItem(wikiConfig.key, JSON.stringify(wikiRuns));
+    } catch {
+      // Wiki run slots are optional local convenience state.
+    }
+  }
+
+  function writeStoredActiveWiki() {
+    try {
+      global.localStorage?.setItem(wikiConfig.activeKey, activeWiki);
+    } catch {
+      // The console can keep working without stored UI state.
+    }
+  }
+
+  function writeStoredWikiCollapsed() {
+    try {
+      global.localStorage?.setItem(wikiConfig.collapseKey, String(isWikiCollapsed));
+    } catch {
+      // Collapsed state is only a local UI preference.
+    }
+  }
+
+  function readStoredMinerCollapsed() {
+    try {
+      return global.localStorage?.getItem(minerPanelConfig.collapseKey) === "true";
+    } catch {
+      return false;
+    }
+  }
+
+  function writeStoredMinerCollapsed() {
+    try {
+      global.localStorage?.setItem(minerPanelConfig.collapseKey, String(isMinerCollapsed));
+    } catch {
+      // VirtMesh collapsed state is only a local UI preference.
+    }
+  }
+
+  function parseWikiSites(value) {
+    const found = [];
+    const seen = new Set();
+    const chunks = String(value)
+      .split(/[\n,;]+/)
+      .map((line) => line.replace(/^\s*(?:[-*]|\d+[.)])\s*/, "").trim())
+      .filter(Boolean);
+
+    for (const chunk of chunks) {
+      const normalized = normalizeSiteName(chunk);
+      const site = sites.find((candidate) => {
+        const siteName = normalizeSiteName(candidate.name);
+        const siteKey = normalizeSiteName(candidate.key);
+        return normalized === siteName || normalized === siteKey || normalized.includes(siteName) || normalized.includes(siteKey);
+      });
+
+      if (site && !seen.has(site.key)) {
+        seen.add(site.key);
+        found.push(site.key);
+      }
+    }
+
+    return found;
+  }
+
+  function activeWikiRun() {
+    return wikiRuns[activeWiki];
+  }
+
+  function hasActiveWikiFilter() {
+    const run = activeWikiRun();
+    return Boolean(run.raw.trim() || run.siteKeys.length);
   }
 
   function splitBounds() {
@@ -156,7 +308,11 @@ import { OTREX } from "./integrations/otrex.js";
 
   function visibleSites() {
     const query = dom.siteSearch.value.trim().toLowerCase();
-    return sites.filter((site) => site.name.toLowerCase().includes(query));
+    const activeKeys = new Set(activeWikiRun().siteKeys);
+    return sites.filter((site) => {
+      if (hasActiveWikiFilter() && !activeKeys.has(site.key)) return false;
+      return site.name.toLowerCase().includes(query);
+    });
   }
 
   function renderSites() {
@@ -167,13 +323,21 @@ import { OTREX } from "./integrations/otrex.js";
       activePage = 0;
     }
 
-    dom.alwaysList.innerHTML = renderRows(visible.filter((site) => site.time === "Always"));
-    dom.timedList.innerHTML = uptimeGroups
+    const alwaysRows = visible.filter((site) => site.time === "Always");
+    const timedRows = uptimeGroups
       .filter((group) => group !== "Always")
       .map((group) => renderGroup(group, visible.filter((site) => site.time === group)))
       .join("");
 
+    dom.alwaysList.innerHTML = visible.length ? renderRows(alwaysRows) : renderEmptySites();
+    dom.timedList.innerHTML = visible.length ? timedRows : "";
+
     renderViewer();
+  }
+
+  function renderEmptySites() {
+    const label = activeWikiRun().label;
+    return `<div class="empty-sites">Paste site names into ${label} to build this run.</div>`;
   }
 
   function renderGroup(group, rows) {
@@ -229,6 +393,43 @@ import { OTREX } from "./integrations/otrex.js";
       .join("");
   }
 
+  function renderMinerPanel() {
+    dom.miners.classList.toggle("collapsed", isMinerCollapsed);
+    dom.left.classList.toggle("miners-collapsed", isMinerCollapsed);
+    dom.minerToggle.setAttribute("aria-expanded", String(!isMinerCollapsed));
+    dom.minerToggle.setAttribute("aria-label", isMinerCollapsed ? "Expand VirtMesh" : "Collapse VirtMesh");
+    dom.minerToggle.title = isMinerCollapsed ? "Expand VirtMesh" : "Collapse VirtMesh";
+  }
+
+  function renderWikiPanel() {
+    if (!dom.wikiPanel) return;
+    const run = activeWikiRun();
+    const savedCount = run.siteKeys.length;
+    const hasRaw = Boolean(run.raw.trim());
+    dom.wikiPanel.classList.toggle("collapsed", isWikiCollapsed);
+    dom.wikiToggle.setAttribute("aria-expanded", String(!isWikiCollapsed));
+    dom.wikiToggle.setAttribute("aria-label", isWikiCollapsed ? "Expand Wiki Runs" : "Collapse Wiki Runs");
+    dom.wikiToggle.title = isWikiCollapsed ? "Expand Wiki Runs" : "Collapse Wiki Runs";
+    dom.wikiSummary.textContent = hasActiveWikiFilter()
+      ? `${run.label}: ${savedCount} ${savedCount === 1 ? "site" : "sites"}`
+      : "All sites";
+    dom.wikiName.value = run.name;
+    dom.wikiPaste.value = run.raw;
+    dom.wikiCount.textContent = `${savedCount} ${savedCount === 1 ? "site" : "sites"} saved`;
+    dom.wikiHint.textContent = hasRaw && !savedCount ? "No known WTTG3 sites matched yet." : "Matches are saved on this device.";
+
+    dom.wikiTabs.querySelectorAll(".wiki-tab").forEach((button) => {
+      const isActive = button.dataset.wiki === activeWiki;
+      const buttonRun = wikiRuns[button.dataset.wiki];
+      button.classList.toggle("active", isActive);
+      button.textContent = buttonRun?.label || button.textContent;
+      button.title = buttonRun?.name || "";
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+
+    renderSites();
+  }
+
   function selectSite(key) {
     activeSite = sites.find((site) => site.key === key) || activeSite;
     activePage = 0;
@@ -258,16 +459,55 @@ import { OTREX } from "./integrations/otrex.js";
     });
   });
 
+  dom.minerToggle.addEventListener("click", () => {
+    isMinerCollapsed = !isMinerCollapsed;
+    writeStoredMinerCollapsed();
+    renderMinerPanel();
+  });
+
+  dom.wikiToggle.addEventListener("click", () => {
+    isWikiCollapsed = !isWikiCollapsed;
+    writeStoredWikiCollapsed();
+    renderWikiPanel();
+  });
+
+  dom.wikiTabs.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-wiki]");
+    if (!button) return;
+    activeWiki = button.dataset.wiki;
+    writeStoredActiveWiki();
+    activePage = 0;
+    renderWikiPanel();
+  });
+
+  dom.wikiName.addEventListener("input", () => {
+    activeWikiRun().name = dom.wikiName.value.trim().slice(0, 24) || wikiConfig.defaults[activeWiki].name;
+    writeStoredWikiRuns();
+    renderWikiPanel();
+  });
+
+  dom.wikiPaste.addEventListener("input", () => {
+    const run = activeWikiRun();
+    run.raw = dom.wikiPaste.value;
+    run.siteKeys = parseWikiSites(run.raw);
+    writeStoredWikiRuns();
+    activePage = 0;
+    renderWikiPanel();
+  });
+
+  dom.wikiReset.addEventListener("click", () => {
+    const run = activeWikiRun();
+    const hasSave = run.raw.trim() || run.siteKeys.length || run.name !== wikiConfig.defaults[activeWiki].name;
+    if (hasSave && !global.confirm(`Reset ${run.label} for a new save?`)) return;
+    wikiRuns[activeWiki] = { ...wikiConfig.defaults[activeWiki], siteKeys: [] };
+    writeStoredWikiRuns();
+    activePage = 0;
+    renderWikiPanel();
+  });
+
   dom.toggleViewer.addEventListener("click", () => {
     dom.station.classList.toggle("full-left");
     dom.toggleViewer.textContent = dom.station.classList.contains("full-left") ? "Show viewer" : "Hide viewer";
-  });
-
-  dom.toggleMiners.addEventListener("click", () => {
-    const collapsed = dom.left.classList.toggle("miners-collapsed");
-    dom.toggleMiners.setAttribute("aria-expanded", String(!collapsed));
-    dom.toggleMiners.setAttribute("aria-label", collapsed ? "Expand VirtMesh" : "Collapse VirtMesh");
-    dom.toggleMiners.title = collapsed ? "Expand VirtMesh" : "Collapse VirtMesh";
   });
 
   dom.openExternal.addEventListener("click", () => {
@@ -281,7 +521,9 @@ import { OTREX } from "./integrations/otrex.js";
     }
   });
 
+  activeWiki = readStoredActiveWiki();
   bindSplitter();
-  renderSites();
+  renderWikiPanel();
+  renderMinerPanel();
   renderMiners();
 })(window, document);

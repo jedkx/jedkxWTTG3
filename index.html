@@ -25,6 +25,44 @@
           </div>
         </header>
 
+        <section id="wikiPanel" class="box wiki-panel collapsed">
+          <div class="box-head wiki-head">
+            <div class="panel-title">
+              <button id="wikiToggle" class="collapse-button" type="button" aria-label="Expand Wiki Runs" aria-expanded="false" aria-controls="wikiBody" title="Expand Wiki Runs">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </button>
+              <h2>Wiki Runs</h2>
+            </div>
+            <span id="wikiSummary">All sites</span>
+          </div>
+          <div id="wikiBody" class="wiki-body">
+            <div class="wiki-row">
+              <label>
+                <span>Save name</span>
+                <input id="wikiName" type="text" maxlength="24" placeholder="Codex route" />
+              </label>
+              <div id="wikiTabs" class="wiki-tabs" role="group" aria-label="Filter wiki run">
+                <button class="wiki-tab active" type="button" data-wiki="cos">CoS</button>
+                <button class="wiki-tab" type="button" data-wiki="td">TD</button>
+                <button class="wiki-tab" type="button" data-wiki="trm">TRM</button>
+              </div>
+              <button id="wikiReset" class="icon-button reset-button" type="button" aria-label="Reset active wiki save" title="New save">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                  <path d="M3 4v6h6"></path>
+                </svg>
+              </button>
+            </div>
+            <textarea id="wikiPaste" spellcheck="false" placeholder="Paste copied wiki site names here"></textarea>
+            <div class="wiki-status">
+              <span id="wikiCount">0 sites saved</span>
+              <span id="wikiHint">Matches are saved on this device.</span>
+            </div>
+          </div>
+        </section>
+
         <section class="box uptime">
           <div class="box-head">
             <h2>Website Uptime</h2>
@@ -44,16 +82,18 @@
 
         <section class="box miners">
           <div class="box-head">
-            <h2>VirtMesh</h2>
-            <div class="head-right">
-              <div class="tier-tabs" role="group" aria-label="Filter VirtMesh tier">
-                <button class="tier-tab active" type="button" data-tier="1">Tier I</button>
-                <button class="tier-tab" type="button" data-tier="2">Tier II</button>
-                <button class="tier-tab" type="button" data-tier="3">Tier III</button>
-              </div>
-              <button id="toggleMiners" class="collapse-btn" type="button" aria-expanded="true" aria-label="Collapse VirtMesh" title="Collapse VirtMesh">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            <div class="panel-title">
+              <button id="minerToggle" class="collapse-button" type="button" aria-label="Collapse VirtMesh" aria-expanded="true" aria-controls="minerList" title="Collapse VirtMesh">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
               </button>
+              <h2>VirtMesh</h2>
+            </div>
+            <div class="tier-tabs" role="group" aria-label="Filter VirtMesh tier">
+              <button class="tier-tab active" type="button" data-tier="1">Tier I</button>
+              <button class="tier-tab" type="button" data-tier="2">Tier II</button>
+              <button class="tier-tab" type="button" data-tier="3">Tier III</button>
             </div>
           </div>
           <div id="minerList" class="miner-list"></div>
