@@ -259,8 +259,8 @@ import { OTREX } from "./integrations/otrex.js";
 
     setSplitPercent(readStoredSplit());
 
-    function stopResize(event) {
-      if (!isResizing) return;
+    function stopResize(event, options = {}) {
+      if (!isResizing && !options.force) return;
       isResizing = false;
       dom.splitter.classList.remove("dragging");
       document.body.classList.remove("resizing");
@@ -287,6 +287,11 @@ import { OTREX } from "./integrations/otrex.js";
     dom.splitter.addEventListener("pointerup", stopResize);
     dom.splitter.addEventListener("pointercancel", stopResize);
     dom.splitter.addEventListener("lostpointercapture", stopResize);
+    global.addEventListener("pointerup", stopResize);
+    global.addEventListener("blur", () => stopResize(null, { force: true }));
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopResize(null, { force: true });
+    });
 
     dom.splitter.addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -349,12 +354,12 @@ import { OTREX } from "./integrations/otrex.js";
     return rows
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((site) => {
-      const label = site.forceHack ? `${site.time} <span class="force-hack">FH ${site.forceHack}</span>` : site.time;
       const classes = ["site-row", site.key === activeSite.key ? "active" : "", site.risk ? "risk" : ""].filter(Boolean).join(" ");
+      const pageCount = (site.sub?.length || 0) + 1;
       return `
         <button class="${classes}" data-site="${site.key}" type="button" title="Open ${site.name} clickpoint guide">
           <span class="site-name">${site.name}</span>
-            <span class="site-time">${label}</span>
+          <span class="site-pages" aria-label="${pageCount} pages">${pageCount}</span>
           </button>
         `;
       })

@@ -499,7 +499,7 @@ h2 {
 }
 
 .station.full-left .site-row {
-  grid-template-columns: minmax(0, 1fr) 122px;
+  grid-template-columns: minmax(0, 1fr) 26px;
   min-height: 28px;
   padding: 5px 22px 5px 8px;
 }
@@ -508,7 +508,7 @@ h2 {
   font-size: 14px;
 }
 
-.station.full-left .site-time {
+.station.full-left .site-pages {
   font-size: 11.5px;
 }
 
@@ -527,7 +527,7 @@ h2 {
 
 .site-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 108px;
+  grid-template-columns: minmax(0, 1fr) 24px;
   align-items: center;
   width: 100%;
   min-height: 25px;
@@ -571,17 +571,13 @@ h2 {
   color: var(--red);
 }
 
-.site-time {
+.site-pages {
   color: var(--muted);
   font-size: 10.5px;
   font-variant-numeric: tabular-nums;
+  font-weight: 800;
   text-align: right;
   white-space: nowrap;
-}
-
-.force-hack {
-  color: #d7bd67;
-  font-weight: 800;
 }
 
 .empty-sites {
@@ -653,8 +649,8 @@ h2 {
 }
 
 .viewer-head {
-  min-height: 58px;
-  padding: 7px 8px;
+  min-height: 44px;
+  padding: 4px 7px;
   border-width: 0 0 1px;
   border-radius: 0;
   flex-wrap: wrap;
@@ -678,14 +674,15 @@ h2 {
 .viewer-head h2 {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  line-height: 1.05;
 }
 
 .icon-link {
   display: inline-grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border: 1px solid var(--line);
   border-radius: 0;
   background: #0b0c0e;
@@ -694,8 +691,8 @@ h2 {
 }
 
 .icon-link svg {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -707,8 +704,8 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 32px;
-  padding: 0 11px;
+  min-height: 26px;
+  padding: 0 9px;
   border: 1px solid var(--line);
   border-radius: 0;
   background: #0b0c0e;
@@ -725,11 +722,23 @@ h2 {
   color: var(--text);
 }
 
-iframe {
+.viewer-stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.viewer-stage iframe {
+  display: block;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
   border: 0;
   background: #000;
+  overscroll-behavior: contain;
 }
 
 .help-dialog {
@@ -903,8 +912,8 @@ iframe {
     font-size: 14px;
   }
 
-  .site-time,
-  .station.full-left .site-time {
+  .site-pages,
+  .station.full-left .site-pages {
     font-size: 11px;
   }
 
@@ -987,7 +996,7 @@ iframe {
 
   .site-row,
   .station.full-left .site-row {
-    grid-template-columns: minmax(0, 1fr) 100px;
+    grid-template-columns: minmax(0, 1fr) 24px;
     padding-right: 19px;
   }
 
