@@ -6,7 +6,7 @@ These instructions apply to this repository.
 
 ## Product
 
-This project is **JEDKX WTTG3 Operator Console**, a static helper for Welcome to the Game III. Keep the first screen focused on uptime, clickpoint viewing, and VirtMesh data.
+This project is **JEDKX WTTG3 Operator Console**, a static helper for Welcome to the Game III. Keep the first screen focused on run tools, uptime, clickpoint viewing, and fast source notes for keys/fetch files.
 
 ## Architecture
 
@@ -43,13 +43,25 @@ If data changes and behavior does not, keep the patch limited to `src/data/*` an
 
 Keep Otrex integration fast and deterministic. `src/integrations/otrex.js` should build guide URLs from local site ids and page indexes without startup network calls, scraping, or async work. It may cache generated URL strings, but it must not copy, persist, or transform Otrex page content. The embedded iframe may load remote Otrex pages, but the console itself should not block on Otrex before rendering uptime or VirtMesh data.
 
+## Run Tools
+
+The top-left tool panel owns `Wiki Runs`, `VirtMesh`, `Source Scan`, and `Notes`.
+
+- `Wiki Runs` may persist the three copied wiki-run filters because the user explicitly requested reusable run slots.
+- `VirtMesh` stays local data from `src/data/miners.js`.
+- `Source Scan` parses pasted source in the browser only. Do not persist scanner input or scanned results.
+- `Notes` is editable working text with default `Wiki`, `Key`, and `Fetch` headings. Do not add storage for note contents unless the user explicitly asks for persistent notes.
+- Notes font size is a low-risk UI preference controlled by `Ctrl` + mouse wheel in the Notes editor.
+- Source Scan should stay conservative for keys and broad for fetch files: numbered keys use `1 - value` style hyphen syntax, while fetch references use `file://...fetch`.
+- Double-clicking a scanner result should add it to the matching Notes section and provide visible feedback.
+
 ## Layout State
 
-The only browser-persisted app state should be low-risk UI preference state, currently the bounded left/right panel split. Do not persist selected sites, visited sites, search history, or gameplay progress.
+The only browser-persisted app state should be low-risk UI preference state and explicitly requested reusable wiki-run filters. Current layout preferences include the bounded left/right panel split, the bounded run-tools/uptime split, collapsed tool-panel state, active tool tab, active wiki slot, and Notes font size. Do not persist selected sites, visited sites, search history, source scan input, scanner results, note contents, or gameplay progress.
 
-Desktop uses a bounded draggable splitter. Mobile should remain stacked, touch-friendly, and page-scrollable; do not force the desktop split layout onto narrow screens.
+Desktop uses bounded draggable splitters. Mobile should remain stacked, touch-friendly, and page-scrollable; do not force the desktop split layout onto narrow screens.
 
-The desktop splitter should stay visually invisible in its idle, hover, focus, and drag states. Keep the hit area functional, but do not add visible rails, glowing bars, or large active blocks between panels.
+Desktop splitters should stay visually invisible in idle, hover, focus, and drag states. Keep the hit areas functional, but do not add visible rails, glowing bars, or large active blocks between panels.
 
 ## Local Serving
 
@@ -87,8 +99,11 @@ Then open `index.html` and confirm:
 
 - Website Uptime renders Always and Timed columns.
 - Dragging the splitter resizes the left/right panels and remains bounded.
-- On mobile width, the splitter is hidden and panels stack without clipping uptime or VirtMesh rows.
+- Dragging the tool/uptime splitter resizes the top tool panel and Website Uptime and remains bounded.
+- On mobile width, splitters are hidden and panels stack without clipping uptime or VirtMesh rows.
 - Site clicks update the viewer and active row.
 - Subpage buttons change the embedded Otrex guide.
 - The external-open icon points to the same guide page currently shown.
 - Tier buttons update the VirtMesh list.
+- Source Scan reports `1 - value` keys and `file://...fetch` values without obvious email/path/color false positives.
+- Double-clicking a Source Scan result adds it under `Key` or `Fetch` in Notes and shows visible feedback.

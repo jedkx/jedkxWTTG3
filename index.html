@@ -25,43 +25,91 @@
           </div>
         </header>
 
-        <section id="wikiPanel" class="box wiki-panel collapsed">
-          <div class="box-head wiki-head">
+        <section id="toolPanel" class="box tool-panel collapsed">
+          <div class="box-head tool-head">
             <div class="panel-title">
-              <button id="wikiToggle" class="collapse-button" type="button" aria-label="Expand Wiki Runs" aria-expanded="false" aria-controls="wikiBody" title="Expand Wiki Runs">
+              <button id="toolToggle" class="collapse-button" type="button" aria-label="Expand run tools" aria-expanded="false" aria-controls="toolBody" title="Expand run tools">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="m6 9 6 6 6-6"></path>
                 </svg>
               </button>
-              <h2>Wiki Runs</h2>
+              <div id="toolTabs" class="tool-tabs" role="tablist" aria-label="Run tools">
+                <button class="tool-tab active" id="wikiToolTab" type="button" role="tab" aria-selected="true" aria-controls="wikiBody" data-tool="wiki">Wiki Runs</button>
+                <button class="tool-tab" id="minerToolTab" type="button" role="tab" aria-selected="false" aria-controls="minerBody" data-tool="miners">VirtMesh</button>
+                <button class="tool-tab" id="sourceToolTab" type="button" role="tab" aria-selected="false" aria-controls="sourceBody" data-tool="source">Source Scan</button>
+                <button class="tool-tab" id="notesToolTab" type="button" role="tab" aria-selected="false" aria-controls="notesBody" data-tool="notes">Notes</button>
+              </div>
             </div>
             <span id="wikiSummary">All sites</span>
           </div>
-          <div id="wikiBody" class="wiki-body">
-            <div class="wiki-row">
-              <label>
-                <span>Save name</span>
-                <input id="wikiName" type="text" maxlength="24" placeholder="Codex route" />
-              </label>
-              <div id="wikiTabs" class="wiki-tabs" role="group" aria-label="Filter wiki run">
-                <button class="wiki-tab active" type="button" data-wiki="cos">CoS</button>
-                <button class="wiki-tab" type="button" data-wiki="td">TD</button>
-                <button class="wiki-tab" type="button" data-wiki="trm">TRM</button>
+          <div id="toolBody" class="tool-body">
+            <div id="wikiBody" class="tool-page wiki-body active" role="tabpanel" aria-labelledby="wikiToolTab">
+              <div class="wiki-row">
+                <label>
+                  <span>Save name</span>
+                  <input id="wikiName" type="text" maxlength="24" placeholder="Codex route" />
+                </label>
+                <div id="wikiTabs" class="wiki-tabs" role="group" aria-label="Filter wiki run">
+                  <button class="wiki-tab active" type="button" data-wiki="cos">CoS</button>
+                  <button class="wiki-tab" type="button" data-wiki="td">TD</button>
+                  <button class="wiki-tab" type="button" data-wiki="trm">TRM</button>
+                </div>
+                <button id="wikiReset" class="icon-button reset-button" type="button" aria-label="Reset active wiki save" title="New save">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                    <path d="M3 4v6h6"></path>
+                  </svg>
+                </button>
               </div>
-              <button id="wikiReset" class="icon-button reset-button" type="button" aria-label="Reset active wiki save" title="New save">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M3 12a9 9 0 1 0 3-6.7"></path>
-                  <path d="M3 4v6h6"></path>
-                </svg>
-              </button>
+              <textarea id="wikiPaste" spellcheck="false" placeholder="Paste copied wiki site names here"></textarea>
+              <div class="wiki-status">
+                <span id="wikiCount">0 sites saved</span>
+                <span id="wikiHint">Matches are saved on this device.</span>
+              </div>
             </div>
-            <textarea id="wikiPaste" spellcheck="false" placeholder="Paste copied wiki site names here"></textarea>
-            <div class="wiki-status">
-              <span id="wikiCount">0 sites saved</span>
-              <span id="wikiHint">Matches are saved on this device.</span>
+            <div id="minerBody" class="tool-page miner-body" role="tabpanel" aria-labelledby="minerToolTab">
+              <div class="miner-controls">
+                <div class="tier-tabs" role="group" aria-label="Filter VirtMesh tier">
+                  <button class="tier-tab active" type="button" data-tier="1">Tier I</button>
+                  <button class="tier-tab" type="button" data-tier="2">Tier II</button>
+                  <button class="tier-tab" type="button" data-tier="3">Tier III</button>
+                </div>
+                <span id="minerSummary">10 PCs</span>
+              </div>
+              <div id="minerList" class="miner-list"></div>
+            </div>
+            <div id="sourceBody" class="tool-page source-body" role="tabpanel" aria-labelledby="sourceToolTab">
+              <textarea id="sourcePaste" spellcheck="false" placeholder="Paste page source here"></textarea>
+              <div class="source-results">
+                <div class="source-result-head">
+                  <span id="sourceSummary">No source pasted</span>
+                  <span id="sourceActionStatus" class="source-action-status" aria-live="polite"></span>
+                  <button id="sourceClear" class="source-clear" type="button">Clear</button>
+                </div>
+                <div id="sourceFindings" class="source-findings"></div>
+              </div>
+            </div>
+            <div id="notesBody" class="tool-page notes-body" role="tabpanel" aria-labelledby="notesToolTab">
+              <div class="notes-editor">
+                <button id="notesClear" class="source-clear" type="button">Clear</button>
+                <textarea id="notesText" spellcheck="false" placeholder="Keys, fetch files, and manual run notes"></textarea>
+              </div>
             </div>
           </div>
         </section>
+
+        <div
+          id="toolSplitter"
+          class="tool-splitter"
+          role="separator"
+          tabindex="0"
+          aria-label="Resize run tools and website uptime"
+          aria-orientation="horizontal"
+          aria-valuemin="150"
+          aria-valuemax="380"
+          aria-valuenow="220"
+          title="Drag to resize tools and uptime"
+        ></div>
 
         <section class="box uptime">
           <div class="box-head">
@@ -80,24 +128,6 @@
           </div>
         </section>
 
-        <section class="box miners">
-          <div class="box-head">
-            <div class="panel-title">
-              <button id="minerToggle" class="collapse-button" type="button" aria-label="Collapse VirtMesh" aria-expanded="true" aria-controls="minerList" title="Collapse VirtMesh">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m6 9 6 6 6-6"></path>
-                </svg>
-              </button>
-              <h2>VirtMesh</h2>
-            </div>
-            <div class="tier-tabs" role="group" aria-label="Filter VirtMesh tier">
-              <button class="tier-tab active" type="button" data-tier="1">Tier I</button>
-              <button class="tier-tab" type="button" data-tier="2">Tier II</button>
-              <button class="tier-tab" type="button" data-tier="3">Tier III</button>
-            </div>
-          </div>
-          <div id="minerList" class="miner-list"></div>
-        </section>
       </section>
 
       <div

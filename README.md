@@ -4,7 +4,7 @@
 
 Welcome to the Game III overloads the player with timing, site routing, subpages, clickpoint guides, and mining choices. Existing helpers are useful, but during a run the workflow needs to be tighter: pick the site, know whether it is open, open the matching clickpoint guide, and keep VirtMesh rates visible.
 
-This project is built around that gap. It is a compact **second-screen operator console** for WTTG3: uptime on the left, Otrex clickpoint pages on the right, and VirtMesh rates below the uptime table.
+This project is built around that gap. It is a compact **second-screen operator console** for WTTG3: run tools and uptime on the left, Otrex clickpoint pages on the right, and fast source notes for keys/fetch files during a run.
 
 ## What it does
 
@@ -12,10 +12,14 @@ This project is built around that gap. It is a compact **second-screen operator 
 - Opens the matching Otrex Assistant clickpoint page when a website is selected.
 - Exposes Otrex subpage mappings such as `main`, `submit`, `catalog`, `order`, and `page2`.
 - Provides an external-open icon for the current clickpoint guide.
-- Hides the viewer when the guide is opened externally, leaving the full screen for uptime and VirtMesh.
-- Lets the user resize the uptime/miner panel and Otrex viewer with a bounded splitter.
+- Hides the viewer when the guide is opened externally, leaving the full screen for uptime and run tools.
+- Lets the user resize the tool/uptime split and the left/right viewer split with bounded splitters.
 - Stacks into a touch-friendly single-column layout on mobile screens.
+- Saves three wiki-run filters for copied wiki site lists.
 - Shows VirtMesh hosts by tier, sorted by reported DOS/min.
+- Scans pasted page source for `1 - value` keys and `file://...fetch` references.
+- Provides editable run notes with `Wiki`, `Key`, and `Fetch` sections; double-click a scanner result to add it to the matching section.
+- Supports `Ctrl` + mouse wheel inside Notes to adjust note text size.
 - Includes an in-app `?` help panel and a fuller `docs/helper.md`.
 
 ## Why the project is modular
@@ -47,9 +51,11 @@ Otrex URL construction belongs in `src/integrations/otrex.js`. It is intentional
 ## Engineering decisions
 
 - The Otrex adapter caches generated guide URLs only. It does not fetch, scrape, or store third-party page content.
-- The splitter stores only the user's left-panel width preference in `localStorage`; selected or visited websites are not persisted.
+- The splitters store only local layout preferences in `localStorage`; selected or visited websites are not persisted.
 - Panel resizing is bounded so the uptime table and Otrex viewer cannot be collapsed past useful working sizes.
 - The splitter is desktop-first; mobile uses a stacked layout instead of cramped side-by-side panes.
+- Source Scan is local-only: pasted source is parsed in the browser, and scanner contents are not persisted.
+- Notes are editable working text. The default headings are only a starting template and can be deleted or changed.
 - The project stays static by design: no build pipeline, no runtime backend, and no dependency install required for normal use.
 - Local development should use the included static server instead of `file://` so iframe navigation uses a normal origin.
 - GitHub Pages should publish this repository from branch `main` and folder `/root`; keep `.nojekyll` in place.
@@ -103,12 +109,14 @@ node --check scripts/serve.mjs
 Then open `index.html` and confirm:
 
 - Website Uptime renders Always and Timed columns.
-- Dragging the splitter resizes the left and right panels within bounds.
+- Dragging the top splitter resizes run tools and Website Uptime within bounds.
+- Dragging the main splitter resizes the left and right panels within bounds.
 - On narrow screens, panels stack vertically and lists remain scrollable by the page.
 - Selecting a site changes the active row and embedded guide.
 - Subpage buttons change the guide page.
 - The external-open icon points to the current guide page.
 - Tier buttons update the VirtMesh list.
+- Source Scan reports keys and fetch files, and double-clicking a result adds it under `Key` or `Fetch` in Notes.
 - The `?` button opens the help panel.
 
 ## Sources
