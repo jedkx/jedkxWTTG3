@@ -20,6 +20,7 @@ This project is **JEDKX WTTG3 Operator Console**, a static helper for Welcome to
 - `src/app.js`: rendering and interaction behavior.
 - `scripts/serve.mjs`: dependency-free local static server for iframe-safe development.
 - `.nojekyll`: keeps GitHub Pages in plain static-file mode.
+- `robots.txt` and `sitemap.xml`: search engine discovery hints for the GitHub Pages site.
 - `docs/deploy-github-pages.md`: GitHub Pages publishing notes.
 - `docs/helper.md`: user-facing help and maintenance notes.
 
@@ -69,7 +70,7 @@ Use `node scripts/serve.mjs` for local preview. Do not rely on `file://` for ifr
 
 ## Publishing
 
-Publish GitHub Pages from the repository root, not a generated folder. Keep `.nojekyll` in the root so GitHub serves the files as-is. Do not add a build step, generated deploy directory, or copied third-party Otrex content unless the project direction changes explicitly.
+Publish GitHub Pages from the repository root, not a generated folder. Keep `.nojekyll`, `robots.txt`, and `sitemap.xml` in the root so GitHub serves the files as-is and search engines can discover the public page. Do not add a build step, generated deploy directory, or copied third-party Otrex content unless the project direction changes explicitly.
 
 Keep paths relative so the console works under `https://<owner>.github.io/<repo>/`. Add a `CNAME` file only when the user provides a custom domain. If publishing instructions change, update both `README.md` and `docs/deploy-github-pages.md` in the same pass.
 

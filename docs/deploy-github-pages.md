@@ -49,6 +49,7 @@ The Otrex clickpoint viewer embeds public pages from Otrex Assistant. Local upti
 ## Notes
 
 - Keep `.nojekyll` in the repository root. It makes GitHub Pages serve static files directly.
+- Keep `robots.txt` and `sitemap.xml` in the repository root, then submit `https://<owner>.github.io/<repo>/sitemap.xml` in Google Search Console after Pages is live.
 - Keep all paths relative. The site must work from `https://<owner>.github.io/<repo>/`, not only from a domain root.
 - Do not add a `CNAME` file until a custom domain is chosen.
 - Browser console warnings from third-party iframe headers can appear when Otrex pages are embedded. They are not project build errors.

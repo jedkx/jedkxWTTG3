@@ -36,6 +36,7 @@ The app is intentionally static, but the code is split by responsibility so game
 - `src/app.js` contains rendering and interaction behavior.
 - `scripts/serve.mjs` runs a dependency-free local static server for iframe-safe local use.
 - `.nojekyll` keeps GitHub Pages in plain static-file mode.
+- `robots.txt` and `sitemap.xml` help search engines discover the published GitHub Pages site.
 - `docs/deploy-github-pages.md` explains GitHub Pages publishing from the repository root.
 - `docs/helper.md` explains how the console should be used and maintained.
 - `AGENTS.md` gives repository guidance for future coding agents.
@@ -58,7 +59,7 @@ Otrex URL construction belongs in `src/integrations/otrex.js`. It is intentional
 - Notes are editable working text. The default headings are only a starting template and can be deleted or changed.
 - The project stays static by design: no build pipeline, no runtime backend, and no dependency install required for normal use.
 - Local development should use the included static server instead of `file://` so iframe navigation uses a normal origin.
-- GitHub Pages should publish this repository from branch `main` and folder `/root`; keep `.nojekyll` in place.
+- GitHub Pages should publish this repository from branch `main` and folder `/root`; keep `.nojekyll`, `robots.txt`, and `sitemap.xml` in place.
 
 ## Run
 

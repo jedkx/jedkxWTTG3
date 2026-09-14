@@ -1044,6 +1044,25 @@ h2 {
   overscroll-behavior: contain;
 }
 
+.seo-summary {
+  max-width: 960px;
+  margin: 16px auto;
+  padding: 0 14px 20px;
+  color: #b8bec8;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.seo-summary h2 {
+  margin: 0 0 6px;
+  color: var(--silver);
+  font-size: 15px;
+}
+
+.seo-summary p {
+  margin: 0 0 7px;
+}
+
 .help-dialog {
   width: min(640px, calc(100vw - 32px));
   padding: 0;

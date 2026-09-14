@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jedkx.github.io/jedkxWTTG3/sitemap.xml
